@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var buttons: List<ImageButton>
+    private lateinit var cards: List<MemoryCard>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +23,24 @@ class MainActivity : AppCompatActivity() {
             R.id.imageButton5, R.id.imageButton6, R.id.imageButton7, R.id.imageButton8
         )
 
-        imageButtonIds.forEachIndexed { index, buttonId ->
-            val button = findViewById<ImageButton>(buttonId)
+        buttons = imageButtonIds.map { findViewById<ImageButton>(it) }
+
+        cards = buttons.indices.map { index ->
+            MemoryCard(images[index])
+        }
+
+        buttons.forEachIndexed { index, button ->
             button.setOnClickListener {
                 Toast.makeText(this, "Clicado!", Toast.LENGTH_SHORT).show()
-                button.setImageResource(images[index])
+
+                val card = cards[index]
+                card.isFaceUp = !card.isFaceUp
+
+                if (card.isFaceUp) {
+                    button.setImageResource(images[index])
+                } else {
+                    button.setImageResource(R.drawable.ic_grass)
+                }
             }
         }
     }
